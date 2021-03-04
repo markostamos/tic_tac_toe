@@ -131,13 +131,13 @@ class Game:
         if self.player=="O":
             if self.isvalid(x,y):
                 self.move(x,y)
-                self.print()
+                
                 result = self.check_winner()
                 if result["winner"] is not None:return result
                 
         if self.player=="X":
             x,y = self.AIplay()
-            print(x,y)
+           
             self.move(x,y)
            
         
