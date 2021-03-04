@@ -13,6 +13,7 @@ draw_grid(screen)
 
 game = Game("O")
 game_over = False
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

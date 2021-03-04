@@ -58,9 +58,7 @@ class Game:
             return True    
     def AIplay(self):
         moves = self.validMoves()
-        if len(moves)==9:
-            return (0,0)
-        bestscore = -100
+        bestscore = -100000
         for x in moves:
             board = deepcopy(self.board)
             board[x[0]][x[1]] = "X"
@@ -92,13 +90,13 @@ class Game:
         winner = self.check_winner(board)["winner"]
         if winner is not None:
             if winner=="X":
-                return 1
+                return 100
             elif winner=="O":
-                return -1
+                return -100
             else:
                 return 0
         if maximizingPlayer:
-            maxEval = -100
+            maxEval = -10000
             moves = self.validMoves(board)
             for x in moves:
                 board2 = deepcopy(board)
@@ -110,7 +108,7 @@ class Game:
                     break
             return maxEval
         else:
-            minEval = 100
+            minEval = 10000
             moves = self.validMoves(board)
             for x in moves:
                 board2 = deepcopy(board)
