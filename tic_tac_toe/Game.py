@@ -128,12 +128,16 @@ class Game:
         return self.board
     #revise
     def play(self,x,y):
+       
         if self.player=="O":
             if self.isvalid(x,y):
                 self.move(x,y)
                 
                 result = self.check_winner()
                 if result["winner"] is not None:return result
+            else:
+                return None
+
                 
         if self.player=="X":
             x,y = self.AIplay()
