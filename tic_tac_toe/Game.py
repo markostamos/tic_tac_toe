@@ -8,8 +8,9 @@ class Game:
         self.board = [['-' for x in range(3)] for y in range(3)]
         self.old = []
         
-    def check_winner(self):
-        board = self.board
+    def check_winner(self,board = None):
+        if board is None:
+            board = self.board
         result = dict(type=None,pos=None,winner=None)
         for i in range(3):
             if board[i][0]==board[i][1]==board[i][2]!='-':
@@ -34,12 +35,11 @@ class Game:
         for x in board:
             for y in x:
                 if y=="-":
-                    return None
+                    return result
         result["winner"]="DRAW"
         return result
 
     def move(self,x,y):
-        self.old = deepcopy(self.board) 
         if self.isvalid(x,y):
             self.board[x][y] = self.player
             self.nextplayer()
@@ -48,7 +48,8 @@ class Game:
         return False
     
     def undo(self):
-        self.board = deepcopy(self.old) 
+        self.board = deepcopy(self.old)
+        self.nextplayer()
     def isvalid(self,x,y):
         if x>2 or y>2:return False
         if self.board[x][y]!="-":
@@ -56,17 +57,18 @@ class Game:
         else:
             return True    
     def AIplay(self):
-        return 0,0
-        '''
         moves = self.validMoves()
-        bestscore = -1
-        for board in moves:
-            score = self.minimax(True)
-            if score>bestscore:
-                bestscore=score
-                bestboard=board
-        self.board = deepcopy(bestboard)
-        '''
+        if len(moves)==9:
+            return (0,0)
+        bestscore = -100
+        for x in moves:
+            board = deepcopy(self.board)
+            board[x[0]][x[1]] = "X"
+            score = self.minimax(board,maximizingPlayer=False,alpha=-100,beta=100)
+            if score>=bestscore:
+                bestscore = score
+                best_move = x
+        return best_move
      
 
     #TSEK    
@@ -76,16 +78,49 @@ class Game:
         if winner =="O":return -1
         else:return 0
     #TSEK    
-    def validMoves(self):
+    def validMoves(self,board=None):
+        if board is None:
+            board = self.board
         moves = []
         for x in range(3):
             for y in range(3):
-                if self.board[x][y] =="-":
+                if board[x][y] =="-":
                     moves.append((x,y))
         return moves
 
-    def minimax(self,maximizingPlayer):
-      pass
+    def minimax(self,board,maximizingPlayer,alpha,beta):
+        winner = self.check_winner(board)["winner"]
+        if winner is not None:
+            if winner=="X":
+                return 1
+            elif winner=="O":
+                return -1
+            else:
+                return 0
+        if maximizingPlayer:
+            maxEval = -100
+            moves = self.validMoves(board)
+            for x in moves:
+                board2 = deepcopy(board)
+                board2[x[0]][x[1]] = "X"
+                eval = self.minimax(board2,False,alpha,beta)
+                maxEval = max(maxEval,eval)
+                alpha = max(alpha,eval)
+                if beta<= alpha:
+                    break
+            return maxEval
+        else:
+            minEval = 100
+            moves = self.validMoves(board)
+            for x in moves:
+                board2 = deepcopy(board)
+                board2[x[0]][x[1]] = "O"
+                eval = self.minimax(board2,True,alpha,beta)
+                minEval = min(minEval,eval)
+                beta = min(beta,eval)
+                if beta<=alpha:
+                    break
+            return minEval
 
     def print(self):
         for i in range(3):
@@ -99,17 +134,14 @@ class Game:
             if self.isvalid(x,y):
                 self.move(x,y)
                 self.print()
-                
                 result = self.check_winner()
-                if result!=None:return result
+                if result["winner"] is not None:return result
                 
         if self.player=="X":
-            #x,y = self.AIplay()
-            #if self.isvalid(x,y)!=True:return None
-            moves = self.validMoves()
-            x,y = moves[0]
+            x,y = self.AIplay()
+            print(x,y)
             self.move(x,y)
-            self.print()
+           
         
             
             return self.check_winner()

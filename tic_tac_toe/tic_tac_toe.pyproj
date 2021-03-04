@@ -30,6 +30,9 @@
     <Compile Include="helpers.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="algorithm.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="tic_tac_toe.py" />
   </ItemGroup>
   <ItemGroup>

@@ -73,3 +73,5 @@ def restart(screen,game):
     draw_grid(screen)
     game.restart()
    
+
+

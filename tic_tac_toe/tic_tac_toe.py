@@ -16,7 +16,9 @@ game_over = False
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            sys.exit()
+            pygame.display.quit()
+            pygame.quit()
+            
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             restart(screen=screen,game=game)
             game_over = False
@@ -24,7 +26,7 @@ while True:
             row,col = get_row_col(event,event.pos[0],event.pos[1])
             result = game.play(row,col)
             draw_figures(screen,game.board)
-            if result is not None:
+            if result["winner"] is not None:
                 if result["winner"]=="DRAW":
                     game_over = True
                 else:
