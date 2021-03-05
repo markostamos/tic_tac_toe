@@ -19,6 +19,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
+            sys.exit()
             
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             restart(screen=screen,game=game)

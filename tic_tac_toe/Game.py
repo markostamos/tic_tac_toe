@@ -3,10 +3,8 @@ class Game:
     def __init__(self,player):
         self.board = [['-' for x in range(3)] for y in range(3)]
         self.player = player
-        self.old = []
     def restart(self):
         self.board = [['-' for x in range(3)] for y in range(3)]
-        self.old = []
         
     def check_winner(self,board = None):
         if board is None:
@@ -47,9 +45,6 @@ class Game:
         
         return False
     
-    def undo(self):
-        self.board = deepcopy(self.old)
-        self.nextplayer()
     def isvalid(self,x,y):
         if x>2 or y>2:return False
         if self.board[x][y]!="-":
